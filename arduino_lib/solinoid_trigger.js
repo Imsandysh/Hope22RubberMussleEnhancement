@@ -1,19 +1,21 @@
 var five = require("johnny-five");
-var express = require("express");
-var app = express();
+//var express = require("express");
+//var app = express();
 var board = new five.Board();
-const port = 8080
+//const port = 8080
 
 board.on("ready", function(){
-    var led = new five.Led(13);
-    led.on();
-
+    var relay = new five.Relay(13);
+    //var sensor = new five.Sensor("a0");
+    console.log("toggle");
+    relay.toggle();
     this.repl.inject({
-        led: led
+        relay:relay,
+        //sensor:sensor
       });
 
 }); 
-
+/*
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -23,6 +25,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
-
+*/
 
 

@@ -1,30 +1,40 @@
-const { Board, Sensor, Relay} = require("johnny-five")
-const board = new Board()
+var five = require("johnny-five");
+var board = new five.Board();
 
 var contract = false;
+var old_contract = false;
+var state_lift = "up";
 
-board.on("ready", () => {
-  const sensor = new Sensor("A0")
-  var liftRelay = new Relay(13);
-  var liftRelay = new Relay(12);
+board.on("ready", function(){
+  const sensorForearm = new five.Sensor({
+                                          pin:"A0",
+                                          threshold:50,
+                                        });
+  var liftRelay = new five.Relay(13);
+  var liftRelay = new five.Relay(12);
 
-  sensor.within([100, 150], function(){
+  this.repl.inject({
+    lift: liftRelay,
+    sensor: sensorForearm
 
-      console.log("Amplify Finger up");
-      contract = !contract;
-
-
-      if(contract){
-        liftRelay.on();
-        console.log("lift up");
-      }else{
-        liftRelay.on();
-        console.log("lift down");
-      }
-
-
-      this.repl.inject({
-        relay: liftRelay
-      });
   });
+  
+
+  sensorForearm.on("change", function () {
+    console.log(this.value);
+    var val = this.value;
+
+    if (val > 100){
+      liftRelay.toggle();
+      if (state_lift == "up"){
+        state_lift = "down";
+      }else{
+        state_lift = "up";
+      }
+      console.log(state_lift)
+    }
+  });
+
+
 });
+ 
