@@ -1,21 +1,22 @@
-const { Board, Sensor } = require("johnny-five")
-const board = new Board()
+var five = require("johnny-five");
+var board = new five.Board();
 
-board.on("ready", () => {
-  const sensor = new Sensor("A0")
-  const relay = new five.Relay(13);
+board.on("ready", function() {
+  var sensor = new five.Sensor("A0")
+  var relay = new five.Relay(13);
 
   sensor.on("change", function () {
     console.log(this.value);
     var val = this.value;
 
     if (val > 100){
-      relay.on()
+      relay.open()
       }else{
-        relay.off()
+        relay.close()
       }
+    });
       this.repl.inject({
           relay: relay
-      });
+     
     })
   });
