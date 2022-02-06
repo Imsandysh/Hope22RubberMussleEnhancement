@@ -1,23 +1,11 @@
-var five = require("johnny-five");
-var board = new five.Board();
+const { Board, Sensor } = require("johnny-five")
+const board = new Board()
 
-var contract = false;
-var old_contract = false;
-var state_lift = "up";
+board.on("ready", () => {
+  const sensor = new Sensor("A0")
+  const relay = new five.Relay(13);
 
-board.on("ready", function(){
-  const sensorForearm = new five.Sensor({
-                                          pin:"A0",
-                                          threshold:50,
-                                        });
-  var liftRelay = new five.Relay(13);
-
-    sensor: sensorForearm
-
-  });
-  
-
-  sensorForearm.on("change", function () {
+  sensor.on("change", function () {
     console.log(this.value);
     var val = this.value;
 
@@ -29,7 +17,5 @@ board.on("ready", function(){
       this.repl.inject({
           relay: relay
       });
-    
+    })
   });
-
-
